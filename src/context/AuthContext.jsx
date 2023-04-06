@@ -1,6 +1,12 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { auth, db } from '../firebase';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
+import { 
+    GoogleAuthProvider,
+    signInWithPopup,
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, 
+    signOut, 
+    onAuthStateChanged } from 'firebase/auth';
 import { setDoc, doc } from "firebase/firestore"; 
 
 
@@ -8,11 +14,36 @@ import { setDoc, doc } from "firebase/firestore";
 const AuthContext = createContext();
 
 
+const googleProvider = new GoogleAuthProvider();
+
+
 
 export function AuthContextProvider({ children }) {
+    const [defaultImage] = useState('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPC7ikoXgW66ZFb0JFMRADmdD8hxYbgk2N5g&usqp=CAU');
     const [user, setUser] = useState({});
 
+    // signInWithGoogle function
+    async function signInWithGoogle() { 
+        try {
+            const res = await signInWithPopup(auth, googleProvider);
+            const user = res.user;
 
+            await setDoc(doc(db, 'users', user.email), {
+                savedTweets: []
+            })
+        } catch (err) {
+            console.log(err.message);
+        }
+    };
+
+
+    // signInWithEmail function
+    function signInWithEmail(email, password) {
+        return signInWithEmailAndPassword(auth, email, password);
+    }
+
+
+    // signUp function
     async function signUp(email, password) {
         createUserWithEmailAndPassword(auth, email, password);
 
@@ -21,17 +52,46 @@ export function AuthContextProvider({ children }) {
                 savedTweets: []
             })
     
-        } catch (event) {
-            console.error(event);
+        } catch (err) {
+            console.log(err.message);
         }
     }
 
-    function logIn(email, password) {
-        return signInWithEmailAndPassword(auth, email, password);
-    }
-
+    
+    // logOut function
     async function logOut() {
         return await signOut(auth);
+    }
+
+    // renderImage function
+    function renderImage(classNames){
+        if(!user){
+            return (
+                <img 
+                    src={defaultImage} 
+                    alt="" 
+                    className={`block rounded-full object-cover ${classNames}`}
+                />
+            )
+        }
+        else if(user && user.photoURL === null){
+            return (
+                <img 
+                    src={defaultImage} 
+                    alt="" 
+                    className={`block rounded-full object-cover ${classNames}`}
+                />
+            )
+        }
+        else{
+            return (
+                <img 
+                    src={user.photoURL} 
+                    alt="" 
+                    className={`block rounded-full object-cover ${classNames}`}
+                />
+            )
+        }
     }
 
     useEffect(() => {
@@ -45,7 +105,7 @@ export function AuthContextProvider({ children }) {
     });
 
     return (
-        <AuthContext.Provider value={{ signUp, logIn, logOut, user }}>
+        <AuthContext.Provider value={{ signUp, signInWithEmail, signInWithGoogle, logOut, user, renderImage }}>
             {children}
         </AuthContext.Provider>
     );
