@@ -5,7 +5,7 @@ import { UserAuth } from '../context/AuthContext';
 
 
 
-const NavigationBar = () => {
+const Navbar = () => {
     const { user, logOut } = UserAuth();
     const navigate = useNavigate();
 
@@ -62,4 +62,4 @@ const NavigationBar = () => {
   )
 }
 
-export default NavigationBar
+export default Navbar
