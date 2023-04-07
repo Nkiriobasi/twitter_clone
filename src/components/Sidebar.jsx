@@ -16,19 +16,35 @@ const Sidebar = () => {
         className={`rounded-md h-auto xl:w-[250px] w-auto ml-3 p-2.5 fixed top-0 left-0 z-10 overflow-x-hidden mt-[104px] 
         bg-[#3b4e5f] space-y-2 ${locationPath.pathname === '/login' || locationPath.pathname === '/signup' ? 'hidden' : null}`}
     >
-        <Link 
-            to='/' 
-            className={`flex items-center sm:justify-start justify-center space-x-3 p-2.5 
-            hover:bg-[#15202b] rounded-md tooltip ${locationPath.pathname === '/' ? 'bg-[#15202b]' : 'bg-[#3b4e5f]'}`}
-        >
-            {locationPath.pathname === '/' 
-            ? 
-            <RiHome2Fill className='sm:w-[30px] w-[20px] sm:h-[30px] h-[20px]' />
-            :
-            <RiHome2Line className='sm:w-[30px] w-[20px] sm:h-[30px] h-[20px]' />
-            }
-            <span className='xl:inline-block hidden font-semibold text-lg tooltiptext'>Home</span>
-        </Link>
+        {user ? (
+            <Link 
+                to='/home' 
+                className={`flex items-center sm:justify-start justify-center space-x-3 p-2.5 
+                hover:bg-[#15202b] rounded-md tooltip ${locationPath.pathname === '/home' ? 'bg-[#15202b]' : 'bg-[#3b4e5f]'}`}
+            >
+                {locationPath.pathname === '/home' 
+                ? 
+                <RiHome2Fill className='sm:w-[30px] w-[20px] sm:h-[30px] h-[20px]' />
+                :
+                <RiHome2Line className='sm:w-[30px] w-[20px] sm:h-[30px] h-[20px]' />
+                }
+                <span className='xl:inline-block hidden font-semibold text-lg tooltiptext'>Home</span>
+            </Link>
+        ) : (
+            <Link 
+                to='/' 
+                className={`flex items-center sm:justify-start justify-center space-x-3 p-2.5 
+                hover:bg-[#15202b] rounded-md tooltip ${locationPath.pathname === '/' ? 'bg-[#15202b]' : 'bg-[#3b4e5f]'}`}
+            >
+                {locationPath.pathname === '/' 
+                ? 
+                <RiHome2Fill className='sm:w-[30px] w-[20px] sm:h-[30px] h-[20px]' />
+                :
+                <RiHome2Line className='sm:w-[30px] w-[20px] sm:h-[30px] h-[20px]' />
+                }
+                <span className='xl:inline-block hidden font-semibold text-lg tooltiptext'>Home</span>
+            </Link>
+        )}
 
         <span className="block">
             {!user 

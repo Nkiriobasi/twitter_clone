@@ -38,13 +38,14 @@ const Login = () => {
 
     const handleSignInWithGoogle = () => {
         signInWithGoogle()
-        navigate('/')
+        navigate('/home')
     };
 
 
     useEffect(() => {
         if (isSubmitted === true) {
-            navigate('/');
+            // if authenticated
+            navigate('/home', { replace: true })
         }
         
     }, [isSubmitted, navigate]);

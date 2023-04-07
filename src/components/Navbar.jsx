@@ -26,13 +26,23 @@ const Navbar = () => {
     >
         <div className="flex items-center justify-between pt-5 px-3 pb-8">
             <div className="flex items-start sm:w-10 w-8 sm:h-10 h-8 cursor-pointer">
-                <Link to='/'>
-                    <img 
-                        src={TwitterLogo} 
-                        alt="logo" 
-                        className='inline-block object-cover'
-                    />
-                </Link>
+                {user ? (
+                    <Link to='/home'>
+                        <img 
+                            src={TwitterLogo} 
+                            alt="logo" 
+                            className='inline-block object-cover'
+                        />
+                    </Link>
+                ) : (
+                    <Link to='/'>
+                        <img 
+                            src={TwitterLogo} 
+                            alt="logo" 
+                            className='inline-block object-cover'
+                        />
+                    </Link>
+                )}
             </div>
 
             {user ? (
