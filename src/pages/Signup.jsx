@@ -33,7 +33,8 @@ const Signup = () => {
 
     useEffect(() => {
         if (isSubmitted === true) {
-            navigate('/home');
+            // if authenticated
+            navigate('/home', { replace: true })
         }
     }, [isSubmitted, navigate]);
 
