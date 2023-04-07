@@ -13,9 +13,7 @@ import { setDoc, doc } from "firebase/firestore";
 
 const AuthContext = createContext();
 
-
 const googleProvider = new GoogleAuthProvider();
-
 
 
 export function AuthContextProvider({ children }) {
@@ -24,10 +22,9 @@ export function AuthContextProvider({ children }) {
 
     // signInWithGoogle function
     async function signInWithGoogle() { 
-        try {
-            const res = await signInWithPopup(auth, googleProvider);
-            const user = res.user;
+        await signInWithPopup(auth, googleProvider);
 
+        try {
             await setDoc(doc(db, 'users', user.email), {
                 savedTweets: []
             })
@@ -38,22 +35,23 @@ export function AuthContextProvider({ children }) {
 
 
     // signInWithEmail function
-    function signInWithEmail(email, password) {
-        return signInWithEmailAndPassword(auth, email, password);
+    async function signInWithEmail(email, password) {
+        return await signInWithEmailAndPassword(auth, email, password);
+
     }
 
 
     // signUp function
     async function signUp(email, password) {
-        createUserWithEmailAndPassword(auth, email, password);
+        await createUserWithEmailAndPassword(auth, email, password);
 
         try {
             await setDoc(doc(db, 'users', email), {
                 savedTweets: []
             })
     
-        } catch (err) {
-            console.log(err.message);
+        } catch (error) {
+            console.log(error.message);
         }
     }
 

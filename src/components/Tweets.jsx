@@ -4,6 +4,7 @@ import { db } from '../firebase';
 import { updateDoc, doc, onSnapshot } from 'firebase/firestore';
 import { AiOutlineClose } from 'react-icons/ai';
 import Spinner from '../components/Spinner';
+import { useLocation } from 'react-router-dom';
 
 
 
@@ -11,6 +12,9 @@ import Spinner from '../components/Spinner';
 const Tweets = () => {
     const [tweets, setTweets] = useState([]);
     const {user, renderImage} = UserAuth();
+
+    const locationPath = useLocation();
+
 
 
     useEffect(() => {
@@ -42,13 +46,13 @@ const Tweets = () => {
                 {tweets.map((tweet, index) => (
                     <section 
                         key={`${tweet}-${index}`}
-                        className="w-full flex items-start bg-[#3b4e5f] py-3 px-5 rounded-md mx-auto relative mb-2.5"
+                        className="w-full flex items-start bg-[#3b4e5f] py-3 sm:px-5 px-2.5 rounded-md mx-auto relative mb-2.5"
                     >
                         {renderImage('sm:w-10 w-8 sm:h-10 h-8')}
 
                         <p 
                             onClick={()=> deleteTweet(`${tweet}-${index}`)} 
-                            className='absolute text-gray-300 top-2 right-2 cursor-pointer hover:bg-[#15202b]'
+                            className={`absolute text-gray-300 top-2 right-2 cursor-pointer hover:bg-[#15202b] ${locationPath.pathname !== '/account' ? 'hidden' : 'blcok'}`}
                         >
                             <AiOutlineClose />
                         </p>
@@ -81,7 +85,7 @@ const Tweets = () => {
     else if (user?.email && tweets.length === 0) {
         return (
             <>
-                <h3 className="w-full mt-5 text-center md:text-xl text-base text-white">
+                <h3 className="w-full mt-5 text-center lg:text-xl md:text-base text-sm text-white">
                     Hey there, you have not made a tweet yet.
                 </h3>
             </>
@@ -91,7 +95,7 @@ const Tweets = () => {
     else {
         return (
             <>
-                <h3 className="w-full mt-5 text-center md:text-xl text-base text-white">
+                <h3 className="w-full mt-5 text-center lg:text-xl md:text-base text-sm text-white">
                     Hey there, please you have to be logged in to post a tweet.
                 </h3>
             </>

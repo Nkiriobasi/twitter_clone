@@ -6,14 +6,16 @@ import Login from "./pages/Login";
 import { AuthContextProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Account from "./pages/Account";
+import Sidebar from './components/Sidebar';
 
 
 
 function App() {
   return (
-    <main className='max-w-[1000px] mx-auto md:px-0 px-5'>
+    <main className='max-w-[1366px]'>
       <AuthContextProvider>
         <Navbar />
+        <Sidebar />
         
         <Routes>
           <Route path="/" element={<Home />} />

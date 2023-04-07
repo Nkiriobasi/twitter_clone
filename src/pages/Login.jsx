@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserAuth } from '../context/AuthContext';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+
     const [isSubmitted, setIsSubmitted] = useState(false);
     const { signInWithEmail, signInWithGoogle } = UserAuth();
     const navigate = useNavigate();
@@ -14,12 +17,21 @@ const Login = () => {
     const handleSignInWithEmail = async (event) => {
         event.preventDefault();
 
-        setIsSubmitted(true);
-
         try {
             await signInWithEmail(email, password);
+            toast.success('Logged in Successfully');
+
+            setTimeout(function(){
+                setIsSubmitted(true);
+           }, 5000); //Time before execution
         } catch (error) {
-            setError(error.message);
+            if(error.code === 'auth/wrong-password'){
+                toast.error('Please check the Password');
+            }
+            if(error.code === 'auth/user-not-found'){
+                toast.error('Please check the Email');
+            }
+            setIsSubmitted(false);
         }
     };
     
@@ -39,11 +51,11 @@ const Login = () => {
 
   return (
     <>
-        <div className='w-full h-auto'>
+        <ToastContainer />
+        <div className='w-full h-auto mt-[92px] pt-3'>
             <div className='max-w-[450px] mx-auto bg-[#3b4e5f] text-white'>
                 <div className='max-w-[320px] mx-auto py-10'>
-                    <h1 className={`text-3xl font-bold ${error ? 'pb-4' : 'pb-0'}`}>Login</h1>
-                    {error ? <p className='p-3 bg-red-400 my-2'>{error}</p> : null}
+                    <h1 className={`text-3xl font-bold`}>Login</h1>
 
                     <div
                         className='w-full flex flex-col py-4'
@@ -67,7 +79,11 @@ const Login = () => {
                             Login 
                         </button> 
 
-                        <button className="bg-red-400 py-3 mb-4 rounded font-bold" onClick={handleSignInWithGoogle}>
+                        <button 
+                            className="bg-red-400 py-3 mb-4 rounded font-bold opacity-25 cursor-not-allowed" 
+                            onClick={handleSignInWithGoogle}
+                            disabled={true}
+                        >
                             Login with Google
                         </button>
 
